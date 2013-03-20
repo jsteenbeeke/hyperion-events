@@ -15,6 +15,42 @@
  */
 package com.jeroensteenbeeke.hyperion.events;
 
-public enum EventResult {
-	OK, ERROR_CONTINUE, ERROR_ABORT;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+public class EventResult {
+	private final boolean abort;
+
+	private final String message;
+
+	private final List<Event<?>> triggeredEvents;
+
+	private EventResult(boolean abort, String message,
+			List<Event<?>> triggeredEvents) {
+		super();
+		this.abort = abort;
+		this.message = message;
+		this.triggeredEvents = triggeredEvents;
+	}
+
+	List<Event<?>> getTriggeredEvents() {
+		return triggeredEvents;
+	}
+
+	boolean isAbort() {
+		return abort;
+	}
+
+	String getMessage() {
+		return message;
+	}
+
+	public static EventResult ok(Event<?>... triggered) {
+		return new EventResult(false, null, Lists.newArrayList(triggered));
+	}
+
+	public static EventResult abort(String message) {
+		return new EventResult(true, message, Lists.<Event<?>> newArrayList());
+	}
 }

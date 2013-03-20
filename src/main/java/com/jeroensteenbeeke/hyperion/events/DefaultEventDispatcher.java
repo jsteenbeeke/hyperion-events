@@ -30,6 +30,7 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.util.ClassUtils;
 
 import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 public class DefaultEventDispatcher implements IEventDispatcher,
@@ -67,13 +68,28 @@ public class DefaultEventDispatcher implements IEventDispatcher,
 	public void dispatchEvent(Event<?> event) {
 		AutowireCapableBeanFactory factory = applicationContext
 				.getAutowireCapableBeanFactory();
-		for (Class<? extends EventHandler<?>> eventHandler : handlers
-				.get((Class<? extends Event<?>>) event.getClass())) {
-			EventHandler<Event<?>> handler = (EventHandler<Event<?>>) factory
-					.autowire(eventHandler,
-							AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE, true);
+		List<Event<?>> queue = Lists.<Event<?>> newArrayList(event);
 
-			handler.onEvent(event);
+		while (!queue.isEmpty()) {
+			Event<?> evt = queue.remove(0);
+
+			for (Class<? extends EventHandler<?>> eventHandler : handlers
+					.get((Class<? extends Event<?>>) evt.getClass())) {
+				EventHandler<Event<?>> handler = (EventHandler<Event<?>>) factory
+						.autowire(eventHandler,
+								AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE,
+								true);
+
+				EventResult result = handler.onEvent(evt);
+
+				if (result.isAbort()) {
+					throw new RuntimeException(String.format(
+							"Handler %s aborted event %s with message: %s",
+							handler, evt, result.getMessage()));
+				}
+
+				queue.addAll(result.getTriggeredEvents());
+			}
 		}
 	}
 

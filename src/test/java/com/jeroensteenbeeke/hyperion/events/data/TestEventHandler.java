@@ -31,7 +31,7 @@ public class TestEventHandler implements EventHandler<TestEvent> {
 	public EventResult onEvent(TestEvent event) {
 		called += counterService.getNumberOfBeans();
 
-		return EventResult.OK;
+		return EventResult.ok();
 	}
 
 }

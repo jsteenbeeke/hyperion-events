@@ -27,6 +27,6 @@ public class TestMultiInterfaceEventHandler implements Serializable,
 	@Override
 	public EventResult onEvent(TestEvent event) {
 
-		return EventResult.OK;
+		return EventResult.ok();
 	}
 }
