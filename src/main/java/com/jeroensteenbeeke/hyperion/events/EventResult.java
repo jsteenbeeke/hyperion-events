@@ -17,6 +17,9 @@ package com.jeroensteenbeeke.hyperion.events;
 
 import java.util.List;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Lists;
 
 public class EventResult {
@@ -34,6 +37,7 @@ public class EventResult {
 		this.triggeredEvents = triggeredEvents;
 	}
 
+	@Nonnull
 	List<Event<?>> getTriggeredEvents() {
 		return triggeredEvents;
 	}
@@ -42,15 +46,18 @@ public class EventResult {
 		return abort;
 	}
 
+	@CheckForNull
 	String getMessage() {
 		return message;
 	}
 
+	@Nonnull
 	public static EventResult ok(Event<?>... triggered) {
 		return new EventResult(false, null, Lists.newArrayList(triggered));
 	}
 
-	public static EventResult abort(String message) {
+	@Nonnull
+	public static EventResult abort(@Nonnull String message) {
 		return new EventResult(true, message, Lists.<Event<?>> newArrayList());
 	}
 }

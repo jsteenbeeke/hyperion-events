@@ -15,6 +15,9 @@
  */
 package com.jeroensteenbeeke.hyperion.events;
 
+import javax.annotation.Nonnull;
+
 public interface EventHandler<T extends Event<?>> {
-	EventResult onEvent(T event);
+	@Nonnull
+	EventResult onEvent(@Nonnull T event);
 }

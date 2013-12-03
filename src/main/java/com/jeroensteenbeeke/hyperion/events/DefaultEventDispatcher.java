@@ -20,6 +20,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -65,7 +67,7 @@ public class DefaultEventDispatcher implements IEventDispatcher,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void dispatchEvent(Event<?> event) {
+	public void dispatchEvent(@Nonnull Event<?> event) {
 		AutowireCapableBeanFactory factory = applicationContext
 				.getAutowireCapableBeanFactory();
 		List<Event<?>> queue = Lists.<Event<?>> newArrayList(event);
