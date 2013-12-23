@@ -50,6 +50,11 @@ public class EventResult {
 	String getMessage() {
 		return message;
 	}
+	
+	@Nonnull
+	public static EventResult ok(@Nonnull List<Event<?>> triggered) {
+		return new EventResult(false, null, triggered);
+	}
 
 	@Nonnull
 	public static EventResult ok(Event<?>... triggered) {
